@@ -77,53 +77,34 @@ function addDatesAsEventName(){
 	
 	[...divs].forEach(d => {
 		
-		//console.log(d.parentElement.getAttribute('data-name'));
-		//if(d.parentElement.getAttribute('data-name')!=''){
+		var divDates = d.getElementsByTagName("div");
+		[...divDates].forEach(dd => {
+			var s = dd.innerText;
 			
-			var divDates = d.getElementsByTagName("div");
-			[...divDates].forEach(dd => {
-				var s = dd.innerText;
-				
-				if(s.substring(3,4)=="," && ('SUN,MON,TUE,WED,THU,FRI,SAT').indexOf(s.substring(0,3))>-1 ){
-					var dayOfWk = s.substring(0,3);
-					
-					var monthDay = s.substring(5,11).replace(",","").trim();
-					var mnth = monthDay.substring(0,3);
-					var mnthNo = getMonthNo(mnth);
-					
-					var dy = parseInt(monthDay.substring(4,6).trim());
-					var dtNow = new Date();
-					var yr = dtNow.getFullYear();
-					var evtDate = new Date(yr,mnthNo,dy);
-					if(evtDate<dtNow){
-						evtDate.setFullYear(evtDate.getFullYear()+1);
-					}
-					
-					
-					var links = d.getElementsByTagName("a");
-					var linkLabel = '';
-					[...links].forEach(link => {
-						var label = link.getAttribute('aria-label');
-						if(label){
-							linkLabel += label;
-						}
-					});
-					var dataName = formatDate(evtDate)+'-'+linkLabel;
-					//console.info(dataName);
-					d.parentElement.setAttribute('data-name',dataName);
-					
-					//console.info(d.parentElement.getAttribute('data-name'));
-					
-					// var tempSpan = document.createElement('span');
-					// tempSpan.style.backgroundColor = 'yellow';
-					// tempSpan.innerText=divAboveArticle.getAttribute('data-name');
-					// divAboveArticle.insertAdjacentElement('afterbegin',tempSpan);
-					
+			if(s.substring(3,4)=="," && ('SUN,MON,TUE,WED,THU,FRI,SAT').indexOf(s.substring(0,3))>-1 ){
+				var dayOfWk = s.substring(0,3);
+				var monthDay = s.substring(5,11).replace(",","").trim();
+				var mnth = monthDay.substring(0,3);
+				var mnthNo = getMonthNo(mnth);
+				var dy = parseInt(monthDay.substring(4,6).trim());
+				var dtNow = new Date();
+				var yr = dtNow.getFullYear();
+				var evtDate = new Date(yr,mnthNo,dy);
+				if(evtDate<dtNow){
+					evtDate.setFullYear(evtDate.getFullYear()+1);
 				}
-				
-			});
-		//}
-		
+				var links = d.getElementsByTagName("a");
+				var linkLabel = '';
+				[...links].forEach(link => {
+					var label = link.getAttribute('aria-label');
+					if(label){
+						linkLabel += label;
+					}
+				});
+				var dataName = formatDate(evtDate)+'-'+linkLabel;
+				d.parentElement.setAttribute('data-name',dataName);
+			}
+		});
 	});
 }
 
@@ -137,10 +118,6 @@ function hideFacebookEvents(){
 	codes.push("675831546460193");
 	codes.push("649863482202738");
 	codes.push("1354392701575515");
-	codes.push("999999999999999");
-	codes.push("999999999999999");
-	codes.push("999999999999999");
-	codes.push("999999999999999");
 	
 	var blocks = [];
 	blocks.push("Night at the Movies");
@@ -154,7 +131,9 @@ function hideFacebookEvents(){
 	blocks.push("BRACU IEEE");
 	blocks.push("Seedorf");
 	blocks.push("🄺🄰🄽🄶");
-	blocks.push("Reacting to Lincoln's Assassination")
+	blocks.push("Reacting to Lincoln's Assassination");
+	blocks.push("Diving at the rocks GmbH");
+	blocks.push("Mulberry Divers")
 	
 	if(!document.getElementById("EventList")){
 		const parentDiv = document.querySelector("div[role='feed'] > div");
@@ -165,28 +144,28 @@ function hideFacebookEvents(){
 	
 	[...divs].forEach(d => {
 		var divAboveArticle = d.parentNode;
-		//console.info("X:",divAboveArticle);
-		
 		var links = d.getElementsByTagName("a");
 		if(links){
 			[...links].forEach(link => {
 				if(link){
 					codes.forEach(c=>{
 						if(link.href.indexOf(c)>-1){
-							//console.info("*************************** remove ********************************")
 							divAboveArticle.remove();
 						}
 					});
-					blocks.forEach(block => {
-						var spanTitle = link.getElementsByTagName("span")[0];
-						if(spanTitle){
-							spanTitleText=spanTitle.innerText;
-							if(spanTitleText.indexOf(block)>-1){
-								divAboveArticle.remove();		
-							}
-						}
-					});
+					
 				}
+			});
+			blocks.forEach(block => {
+				var spanTitles = d.getElementsByTagName("span");
+				[...spanTitles].forEach(spanTitle => {
+					if(spanTitle){
+						spanTitleText=spanTitle.innerText;
+						if(spanTitleText.indexOf(block)>-1){
+							divAboveArticle.remove();		
+						}
+					}
+				});
 			});
 		}
 		
@@ -205,17 +184,14 @@ function hideFacebookEvents(){
 
 
 function SortEvents(){
-	//console.info('called!');
 	const eventList = document.querySelector('#EventList');
 	const reactEvents = [...eventList.children];
 	reactEvents.sort((a, b) => a.getAttribute('data-name') > b.getAttribute('data-name') ? 1 : -1);
 	reactEvents.forEach(div => eventList.appendChild(div));
-	
 	var ids = [];
 	reactEvents.forEach(myevt => {
 		ids.push(myevt.getAttribute('data-name'));
 	});
-	console.info(ids);
 }
 
 

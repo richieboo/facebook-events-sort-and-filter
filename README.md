@@ -6,4 +6,4 @@ This code removes past events and events with keywords/phrases added to an 'bloc
 
 Each morning on schedule my browser opens to https://www.facebook.com/search/events/?q=react
 
-This code is used with User JavaScript and CSS code injection extension for domain https://www.facebook.com/
+This code is used with User JavaScript and CSS code injection extension for url https://www.facebook.com/search/events/
